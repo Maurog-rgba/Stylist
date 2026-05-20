@@ -105,6 +105,16 @@ class StylistInferenceModule(private val reactContext: ReactApplicationContext) 
     }
 
     @ReactMethod
+    fun inferFromFile(imagePath: String, prompt: String, promise: Promise) {
+        try {
+            val result = nativeInferFromFile(imagePath, prompt)
+            promise.resolve(result)
+        } catch (e: Exception) {
+            promise.reject("INFER_ERROR", e.message)
+        }
+    }
+
+    @ReactMethod
     fun unloadModel(promise: Promise) {
         try {
             nativeUnloadModel()
@@ -136,9 +146,8 @@ class StylistInferenceModule(private val reactContext: ReactApplicationContext) 
 
     private external fun nativeInit(nativeLibDir: String): Int
     private external fun nativeLoadModel(modelPath: String, mmprojPath: String): Int
-    private external fun nativeInfer(
-        imageData: java.nio.ByteBuffer, imageDataSize: Int, prompt: String
-    ): String
+    private external fun nativeInfer(imageData: java.nio.ByteBuffer, imageDataSize: Int, prompt: String): String
+    private external fun nativeInferFromFile(imagePath: String, prompt: String): String
     private external fun nativeUnloadModel(): Int
     private external fun nativeIsModelLoaded(): Boolean
 }
