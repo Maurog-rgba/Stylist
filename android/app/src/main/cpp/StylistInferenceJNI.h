@@ -35,7 +35,7 @@ private:
     llama_context* ctx_      = nullptr;
     mtmd_context*  mtmd_ctx_ = nullptr;
 
-    static constexpr int N_CTX     = 2048;
+    static constexpr int N_CTX     = 512;
     static constexpr int N_THREADS = 4;
-    static constexpr int N_BATCH   = 512;
+    static constexpr int N_BATCH   = 64;
 };

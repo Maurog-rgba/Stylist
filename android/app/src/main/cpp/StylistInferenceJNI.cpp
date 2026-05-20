@@ -82,6 +82,8 @@ int StylistInferenceEngine::loadModel(const std::string& modelPath,
     ctx_params.n_batch        = N_BATCH;
     ctx_params.n_threads      = N_THREADS;
     ctx_params.n_threads_batch = N_THREADS;
+    ctx_params.type_k         = GGML_TYPE_Q8_0;
+    ctx_params.type_v         = GGML_TYPE_Q8_0;
 
     ctx_ = llama_new_context_with_model(model_, ctx_params);
     if (!ctx_) {
@@ -209,7 +211,7 @@ std::string StylistInferenceEngine::infer(
     std::string result;
     result.reserve(512);
 
-    const int max_new_tokens = 256;
+    const int max_new_tokens = 128;
 
     llama_batch batch = llama_batch_init(1, 0, 1);
 
