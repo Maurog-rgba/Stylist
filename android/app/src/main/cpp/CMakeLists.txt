@@ -20,7 +20,8 @@ set(REACT_COMMON_INCLUDES
 )
 
 # --------------------------------------------------------------------------
-# llama.cpp integration
+# llama.cpp integration — path is ../../../../../../llama.cpp relative to
+# android/app/src/main/cpp  →  C:/.../GitHub/llama.cpp
 # --------------------------------------------------------------------------
 set(LLAMA_SRC "${CMAKE_CURRENT_LIST_DIR}/../../../../../../llama.cpp")
 
@@ -53,33 +54,25 @@ add_subdirectory(${LLAMA_SRC} build-llama)
 # Stylist Inference JNI library (includes mtmd sources directly)
 # --------------------------------------------------------------------------
 
-file(GLOB MTMD_SOURCES
+set(MTMD_SOURCES
     ${LLAMA_SRC}/tools/mtmd/mtmd.cpp
     ${LLAMA_SRC}/tools/mtmd/mtmd-audio.cpp
     ${LLAMA_SRC}/tools/mtmd/mtmd-image.cpp
     ${LLAMA_SRC}/tools/mtmd/mtmd-helper.cpp
     ${LLAMA_SRC}/tools/mtmd/clip.cpp
-    ${LLAMA_SRC}/tools/mtmd/models/*.cpp
+    ${LLAMA_SRC}/tools/mtmd/deprecation-warning.cpp
 )
 
-file(GLOB MTMD_HEADERS
-    ${LLAMA_SRC}/tools/mtmd/mtmd.h
-    ${LLAMA_SRC}/tools/mtmd/mtmd-audio.h
-    ${LLAMA_SRC}/tools/mtmd/mtmd-image.h
-    ${LLAMA_SRC}/tools/mtmd/mtmd-helper.h
-    ${LLAMA_SRC}/tools/mtmd/clip.h
-    ${LLAMA_SRC}/tools/mtmd/clip-impl.h
-    ${LLAMA_SRC}/tools/mtmd/clip-model.h
-    ${LLAMA_SRC}/tools/mtmd/clip-graph.h
-    ${LLAMA_SRC}/tools/mtmd/models/models.h
-    ${LLAMA_SRC}/tools/mtmd/deprecation-warning.cpp
+# Models sources (one file per vision model)
+file(GLOB MTMD_MODEL_SOURCES
+    ${LLAMA_SRC}/tools/mtmd/models/*.cpp
 )
 
 add_library(stylist_inference SHARED
     StylistInferenceJNI.cpp
     StylistInferenceJNI.h
     ${MTMD_SOURCES}
-    ${MTMD_HEADERS}
+    ${MTMD_MODEL_SOURCES}
 )
 
 target_compile_definitions(stylist_inference PRIVATE
@@ -98,6 +91,7 @@ target_include_directories(stylist_inference PRIVATE
     ${LLAMA_SRC}/tools/mtmd
     ${LLAMA_SRC}/tools/mtmd/models
     ${LLAMA_SRC}/vendor
+    ${LLAMA_SRC}/vendor/stb
 )
 
 target_link_libraries(stylist_inference
@@ -107,8 +101,15 @@ target_link_libraries(stylist_inference
 )
 
 if(NOT MSVC)
-    target_compile_options(stylist_inference PRIVATE -Wno-cast-qual)
+    target_compile_options(stylist_inference PRIVATE
+        -Wno-cast-qual
+        -Wno-unused-variable
+        -Wno-unused-function
+    )
 endif()
 if(ANDROID)
-    target_compile_options(stylist_inference PRIVATE -Wno-missing-prototypes)
+    target_compile_options(stylist_inference PRIVATE
+        -Wno-missing-prototypes
+        -fexceptions
+    )
 endif()
