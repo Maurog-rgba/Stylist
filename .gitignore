@@ -85,3 +85,4 @@ models/*.gguf.gz
 .vscode/
 *.swp
 *.swo
+.antigravitycli/

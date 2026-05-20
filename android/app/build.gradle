@@ -98,6 +98,8 @@ android {
     }
     packagingOptions {
         pickFirst "lib/**/libc++_shared.so"
+        pickFirst "lib/**/libfbjni.so"
+        pickFirst "lib/**/libreactnative.so"
     }
     aaptOptions {
         noCompress += "gguf"
