@@ -6,5 +6,6 @@ export interface InferenceResult {
 }
 
 export interface ImageInput {
-  buffer: number[];
+  path?: string;
+  buffer?: number[];
 }

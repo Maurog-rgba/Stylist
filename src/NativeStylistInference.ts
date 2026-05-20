@@ -11,6 +11,7 @@ export interface InferenceResult {
 export interface Spec extends TurboModule {
   loadModel(path: string): Promise<void>;
   infer(imageBuffer: Object, prompt: string): Promise<Object>;
+  inferFromFile(imagePath: string, prompt: string): Promise<string>;
   unloadModel(): Promise<void>;
 }
 

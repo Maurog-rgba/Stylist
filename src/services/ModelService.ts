@@ -91,12 +91,27 @@ export class ModelService {
 
     const startTime = Date.now();
 
-    const rawResult: string = await Promise.race([
-      StylistInference.infer(imageInput, INFERENCE_PROMPT),
-      new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('Inference timeout')), INFERENCE_TIMEOUT_MS),
-      ),
-    ]);
+    let rawResult: string;
+    if (imageInput.path) {
+      // Path from react-native-vision-camera usually starts with file://, 
+      // llama.cpp needs absolute path without prefix
+      const absolutePath = imageInput.path.replace('file://', '');
+      rawResult = await Promise.race([
+        StylistInference.inferFromFile(absolutePath, INFERENCE_PROMPT),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Inference timeout')), INFERENCE_TIMEOUT_MS),
+        ),
+      ]);
+    } else if (imageInput.buffer) {
+      rawResult = await Promise.race([
+        StylistInference.infer(imageInput, INFERENCE_PROMPT),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Inference timeout')), INFERENCE_TIMEOUT_MS),
+        ),
+      ]);
+    } else {
+      throw new Error('imageInput must contain path or buffer');
+    }
 
     const inferenceTimeMs = Date.now() - startTime;
 

@@ -36,14 +36,8 @@ export function CameraScreen({ onCapture, disabled }: Props) {
         qualityPrioritization: 'speed',
       });
 
-      const uri = `file://${photo.path}`;
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const arrayBuffer = await blob.arrayBuffer();
-      const rawBytes = new Uint8Array(arrayBuffer);
-
       onCapture({
-        buffer: Array.from(rawBytes),
+        path: photo.path,
       });
     } catch (e: any) {
       Alert.alert('Capture Error', e.message ?? 'Failed to capture photo');
