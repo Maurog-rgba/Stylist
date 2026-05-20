@@ -14,10 +14,10 @@ Provide your response as a JSON object with exactly these fields:
 
 Only output the JSON, no other text.`;
 
-const INFERENCE_TIMEOUT_MS = 30000;
+const INFERENCE_TIMEOUT_MS = 120000;
 
-const MODEL_FILENAME = 'ggml-model-q4_k.gguf';
-const MMPROJ_FILENAME = 'mmproj-model-f16.gguf';
+const MODEL_FILENAME = 'llava-v1.5-7b-Q2_K.gguf';
+const MMPROJ_FILENAME = 'llava-v1.5-7b-mmproj-model-f16.gguf';
 
 export class ModelService {
   private static instance: ModelService;

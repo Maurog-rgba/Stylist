@@ -31,8 +31,8 @@ class StylistInferenceModule(private val reactContext: ReactApplicationContext) 
     @ReactMethod
     fun loadModel(modelPath: String, mmprojPath: String, promise: Promise) {
         try {
-            val resolvedModelPath = resolveAssetPath(modelPath, "ggml-model-q4_k.gguf")
-            val resolvedMmprojPath = resolveAssetPath(mmprojPath, "mmproj-model-f16.gguf")
+            val resolvedModelPath = resolveAssetPath(modelPath, "llava-v1.5-7b-Q2_K.gguf")
+            val resolvedMmprojPath = resolveAssetPath(mmprojPath, "llava-v1.5-7b-mmproj-model-f16.gguf")
 
             val nativeLibDir = reactContext.applicationInfo.nativeLibraryDir
             nativeInit(nativeLibDir)
