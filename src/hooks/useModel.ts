@@ -43,11 +43,14 @@ export function useModel() {
 
       if (prev === 'active' && nextState.match(/inactive|background/)) {
         unload();
+        setState({ status: 'idle' });
+      } else if (prev.match(/inactive|background/) && nextState === 'active') {
+        initialize();
       }
     });
 
     return () => sub.remove();
-  }, [unload]);
+  }, [unload, initialize]);
 
   return { state, initialize, unload, service: serviceRef.current };
 }
