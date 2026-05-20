@@ -24,7 +24,7 @@ class StylistInferencePackage : TurboReactPackage() {
                     false, // needsEagerInit
                     true,  // hasConstants
                     false, // isCxxModule
-                    true   // isTurboModule
+                    false   // isTurboModule
                 )
             )
         }
